@@ -1,14 +1,11 @@
 package org.sharedhealth.mci.validation.constraintvalidator;
 
-import org.sharedhealth.mci.validation.constraints.Date;
-import java.lang.annotation.Annotation;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import org.sharedhealth.mci.validation.constraints.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sharedhealth.mci.validation.constraints.Length;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 
 public class LengthValidator implements ConstraintValidator<Length, String> {
@@ -24,16 +21,16 @@ public class LengthValidator implements ConstraintValidator<Length, String> {
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
 
-     if(value != null) {
-        logger.debug(" Name  [" + value + "]");
-        logger.debug(" length [" + length.lengthSize() + "]");
-        String trimvalue = value.trim();
-        logger.debug(" trim value [" + trimvalue + "]");
-        logger.debug(" trim lenght [" + trimvalue.length() + "]");
-        if (trimvalue.length() > (int) length.lengthSize()) {
-            return false;
+        if (value != null) {
+            logger.debug(" Name  [" + value + "]");
+            logger.debug(" length [" + length.lengthSize() + "]");
+            String trimvalue = value.trim();
+            logger.debug(" trim value [" + trimvalue + "]");
+            logger.debug(" trim lenght [" + trimvalue.length() + "]");
+            if (trimvalue.length() > (int) length.lengthSize()) {
+                return false;
+            }
         }
-    }
         return true;
 
     }
