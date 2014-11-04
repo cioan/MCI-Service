@@ -43,28 +43,16 @@ public class PatientController {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = {APPLICATION_JSON_VALUE})
-    public DeferredResult<ResponseEntity<MCIResponse>> create(@RequestBody @Validated({RequiredGroup.class, Default.class}) PatientMapper patientMapper, BindingResult bindingResult)
-            throws ExecutionException, InterruptedException {
-        logger.debug("Trying to create patient.");
-        final DeferredResult<ResponseEntity<MCIResponse>> deferredResult = new DeferredResult<>();
+    public ResponseEntity<MCIResponse> create(
+            @RequestBody @Validated({RequiredGroup.class, Default.class}) PatientMapper patientMapper,
+            BindingResult bindingResult) throws ExecutionException, InterruptedException {
 
+        logger.debug("Trying to create patient.");
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
         }
-
-
-        patientService.create(patientMapper).addCallback(new ListenableFutureCallback<MCIResponse>() {
-            @Override
-            public void onSuccess(MCIResponse mciResponse) {
-                deferredResult.setResult(new ResponseEntity<MCIResponse>(mciResponse, mciResponse.httpStatusObject));
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                deferredResult.setErrorResult(extractAppException(e));
-            }
-        });
-        return deferredResult;
+        MCIResponse response = patientService.create(patientMapper);
+        return new ResponseEntity<>(response, response.httpStatusObject);
     }
 
     @RequestMapping(value = "/{healthId}", method = RequestMethod.GET)

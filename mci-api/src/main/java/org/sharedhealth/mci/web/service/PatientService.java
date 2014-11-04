@@ -33,7 +33,7 @@ public class PatientService {
         this.settingService = settingService;
     }
 
-    public ListenableFuture<MCIResponse> create(PatientMapper patientMapper) {
+    public MCIResponse create(PatientMapper patientMapper) throws ExecutionException, InterruptedException {
         return patientRepository.create(patientMapper);
     }
 

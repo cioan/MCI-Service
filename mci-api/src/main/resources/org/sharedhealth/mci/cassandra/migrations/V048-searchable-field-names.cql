@@ -4,13 +4,13 @@ ALTER TABLE patient ADD lower_given_name varchar;
 CREATE TABLE IF NOT EXISTS nid_mapping (
     national_id varchar,
     health_id varchar,
-    PRIMARY KEY (national_id)
+    PRIMARY KEY (national_id, health_id)
 );
 
 CREATE TABLE IF NOT EXISTS brn_mapping (
     bin_brn varchar,
     health_id varchar,
-    PRIMARY KEY (bin_brn)
+    PRIMARY KEY (bin_brn, health_id)
 );
 
 CREATE TABLE IF NOT EXISTS uid_mapping (
@@ -19,6 +19,11 @@ CREATE TABLE IF NOT EXISTS uid_mapping (
     PRIMARY KEY (uid, health_id)
 );
 
+CREATE TABLE IF NOT EXISTS phone_number_mapping (
+    phone_number varchar,
+    health_id varchar,
+    PRIMARY KEY (phone_number, health_id)
+);
 
 CREATE TABLE IF NOT EXISTS address_mapping (
     division_id varchar,
@@ -26,7 +31,6 @@ CREATE TABLE IF NOT EXISTS address_mapping (
     upazilla_id varchar,
     given_name varchar,
     surname varchar,
-    creation_time timeuuid,
     health_id varchar,
-    PRIMARY KEY ((division_id, district_id, upazilla_id), given_name, surname, creation_time)
+    PRIMARY KEY ((division_id, district_id, upazilla_id), given_name, surname, health_id)
 );
