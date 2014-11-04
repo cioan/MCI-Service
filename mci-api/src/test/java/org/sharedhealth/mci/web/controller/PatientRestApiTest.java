@@ -1,8 +1,5 @@
 package org.sharedhealth.mci.web.controller;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -14,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.sharedhealth.mci.web.config.EnvironmentMock;
 import org.sharedhealth.mci.web.config.WebMvcConfig;
+import org.sharedhealth.mci.web.handler.ErrorHandler;
 import org.sharedhealth.mci.web.handler.MCIError;
 import org.sharedhealth.mci.web.handler.MCIMultiResponse;
 import org.sharedhealth.mci.web.handler.MCIResponse;
@@ -22,7 +20,7 @@ import org.sharedhealth.mci.web.mapper.PatientMapper;
 import org.sharedhealth.mci.web.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,12 +30,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
-import org.sharedhealth.mci.web.handler.ErrorHandler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -52,7 +51,7 @@ public class PatientRestApiTest {
 
     @Autowired
     @Qualifier("MCICassandraTemplate")
-    private CassandraOperations cqlTemplate;
+    private CassandraTemplate cqlTemplate;
 
     private MockMvc mockMvc;
     private PatientMapper patientMapper;
@@ -223,7 +222,7 @@ public class PatientRestApiTest {
         String present_address = patientMapper.getAddress().getDivisionId() +
                 patientMapper.getAddress().getDistrictId() + patientMapper.getAddress().getUpazillaId();
         String surName = "Mazumder";
-        MvcResult result = mockMvc.perform(get(API_END_POINT + "?sur_name="+surName + "&present_address=" + present_address).accept(APPLICATION_JSON).content(json).contentType(APPLICATION_JSON))
+        MvcResult result = mockMvc.perform(get(API_END_POINT + "?sur_name=" + surName + "&present_address=" + present_address).accept(APPLICATION_JSON).content(json).contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         final MCIMultiResponse body = getMciMultiResponse(result);
@@ -238,7 +237,7 @@ public class PatientRestApiTest {
         String present_address = patientMapper.getAddress().getDivisionId() +
                 patientMapper.getAddress().getDistrictId() + patientMapper.getAddress().getUpazillaId();
         String surName = "Raju";
-        MvcResult result = mockMvc.perform(get(API_END_POINT + "?given_name="+surName + "&present_address=" + present_address).accept(APPLICATION_JSON).content(json).contentType(APPLICATION_JSON))
+        MvcResult result = mockMvc.perform(get(API_END_POINT + "?given_name=" + surName + "&present_address=" + present_address).accept(APPLICATION_JSON).content(json).contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         final MCIMultiResponse body = getMciMultiResponse(result);
@@ -262,7 +261,7 @@ public class PatientRestApiTest {
                 .andReturn();
 
         final ResponseEntity asyncResult = (ResponseEntity<PatientMapper>) getResult.getAsyncResult();
-        final PatientMapper getBody = (PatientMapper)asyncResult.getBody();
+        final PatientMapper getBody = (PatientMapper) asyncResult.getBody();
 
         Assert.assertEquals("1", getBody.getMaritalStatus());
         Assert.assertEquals("M", getBody.getGender());
@@ -271,22 +270,21 @@ public class PatientRestApiTest {
     }
 
     private MCIMultiResponse getMciMultiResponse(MvcResult result) {
-        final ResponseEntity asyncResult = (ResponseEntity< MCIMultiResponse>) result.getAsyncResult();
+        final ResponseEntity asyncResult = (ResponseEntity<MCIMultiResponse>) result.getAsyncResult();
 
-        return (MCIMultiResponse)asyncResult.getBody();
+        return (MCIMultiResponse) asyncResult.getBody();
     }
 
     private MCIResponse getMciResponse(MvcResult result) {
-        final ResponseEntity asyncResult = (ResponseEntity< MCIResponse>) result.getAsyncResult();
+        final ResponseEntity asyncResult = (ResponseEntity<MCIResponse>) result.getAsyncResult();
 
-        return (MCIResponse)asyncResult.getBody();
+        return (MCIResponse) asyncResult.getBody();
     }
 
     @After
     public void teardown() {
         cqlTemplate.execute("truncate patient");
     }
-
 
 
     private class InvalidPatient {

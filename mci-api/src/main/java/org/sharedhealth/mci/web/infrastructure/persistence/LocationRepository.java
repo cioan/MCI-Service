@@ -1,8 +1,5 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
 import com.datastax.driver.core.ResultSetFuture;
 import com.datastax.driver.core.Row;
 import com.google.common.util.concurrent.SettableFuture;
@@ -13,9 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cassandra.core.AsynchronousQueryListener;
-import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class LocationRepository extends BaseRepository {
@@ -24,8 +24,8 @@ public class LocationRepository extends BaseRepository {
     public static final String LOCATION_FIND_BY_GEO_CODE_QUERY = "SELECT * FROM locations WHERE geo_code = '%s'";
 
     @Autowired
-    public LocationRepository(@Qualifier("MCICassandraTemplate") CassandraOperations cassandraOperations) {
-        super(cassandraOperations);
+    public LocationRepository(@Qualifier("MCICassandraTemplate") CassandraTemplate template) {
+        super(template);
     }
 
     public ListenableFuture<Location> findByGeoCode(final String geoCode) {
@@ -33,7 +33,7 @@ public class LocationRepository extends BaseRepository {
         logger.debug("Find location by geo_code CQL: [" + cql + "]");
         final SettableFuture<Location> result = SettableFuture.create();
 
-        cassandraOperations.queryAsynchronously(cql, new AsynchronousQueryListener() {
+        template.queryAsynchronously(cql, new AsynchronousQueryListener() {
             @Override
             public void onQueryComplete(ResultSetFuture rsf) {
                 try {

@@ -1,8 +1,5 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,10 +12,13 @@ import org.sharedhealth.mci.web.mapper.Address;
 import org.sharedhealth.mci.web.mapper.PatientMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -31,7 +31,7 @@ public class PatientRepositoryIT {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     @Qualifier("MCICassandraTemplate")
-    private CassandraOperations cqlTemplate;
+    private CassandraTemplate cqlTemplate;
 
     @Autowired
     private PatientRepository patientRepository;
@@ -88,12 +88,12 @@ public class PatientRepositoryIT {
         patientRepository.create(patientMapper).get();
     }
 
-   @Test
+    @Test
     public void shouldReturnAccepted_IfPatientExistWithProvidedTwoIdFieldsOnCreate() throws ExecutionException, InterruptedException {
-       patientRepository.create(patientMapper).get();
-       patientMapper.setHealthId(null);
-       MCIResponse mciResponse = patientRepository.create(patientMapper).get();
-       assertEquals(mciResponse.getHttpStatus(), ACCEPTED.value());
+        patientRepository.create(patientMapper).get();
+        patientMapper.setHealthId(null);
+        MCIResponse mciResponse = patientRepository.create(patientMapper).get();
+        assertEquals(mciResponse.getHttpStatus(), ACCEPTED.value());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class PatientRepositoryIT {
         assertNotNull(p);
         patientMapper.setHealthId(mciResponse.id);
         patientMapper.setCreatedAt(p.getCreatedAt());
-       patientMapper.setUpdatedAt(p.getUpdatedAt());
+        patientMapper.setUpdatedAt(p.getUpdatedAt());
         assertEquals(patientMapper, p);
     }
 
