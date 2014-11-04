@@ -3,7 +3,27 @@ package org.sharedhealth.mci.web.mapper;
 import org.sharedhealth.mci.web.model.Patient;
 import org.sharedhealth.mci.web.model.SearchCriteria;
 
+import java.util.ArrayList;
+
 public class PatientToSearchCriteriaMapper {
+
+    private ArrayList<Patient> patientArrayList;
+    private ArrayList<SearchCriteria> searchCriterias;
+
+    public PatientToSearchCriteriaMapper(ArrayList<Patient> patientArrayList) {
+        this.patientArrayList = patientArrayList;
+    }
+
+    public  ArrayList<SearchCriteria> convertSearchResult(){
+        for (Patient patient : patientArrayList) {
+            SearchCriteria searchCriteria = new SearchCriteria();
+            convertPatientToSearchCriteria(patient,searchCriteria);
+            searchCriterias.add(searchCriteria);
+
+        }
+        return searchCriterias;
+    }
+
 
     public static void convertPatientToSearchCriteria(Patient patient, SearchCriteria searchCriteria) {
 
