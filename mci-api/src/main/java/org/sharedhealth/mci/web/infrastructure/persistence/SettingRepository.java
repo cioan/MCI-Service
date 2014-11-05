@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cassandra.core.AsynchronousQueryListener;
 import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -27,8 +28,8 @@ public class SettingRepository extends BaseRepository {
     private static final Logger logger = LoggerFactory.getLogger(LocationRepository.class);
 
     @Autowired
-    public SettingRepository(@Qualifier("MCICassandraTemplate") CassandraOperations cassandraOperations) {
-        super(cassandraOperations);
+    public SettingRepository(@Qualifier("MCICassandraTemplate") CassandraTemplate template) {
+        super(template);
     }
 
     public ListenableFuture<Setting> findSettingListenableFutureByKey(final String key) {
@@ -39,7 +40,7 @@ public class SettingRepository extends BaseRepository {
 
         select.where(QueryBuilder.eq("key", key));
 
-        cassandraOperations.queryAsynchronously(select, new AsynchronousQueryListener() {
+        template.queryAsynchronously(select, new AsynchronousQueryListener() {
             @Override
             public void onQueryComplete(ResultSetFuture rsf) {
                 try {
@@ -78,7 +79,7 @@ public class SettingRepository extends BaseRepository {
 
     @CacheEvict("mciSettings")
     public void save(Setting setting) {
-        cassandraOperations.insert(setting);
+        template.insert(setting);
     }
 
     @Cacheable({"mciSettings"})
