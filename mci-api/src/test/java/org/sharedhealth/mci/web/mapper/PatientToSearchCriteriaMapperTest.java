@@ -1,18 +1,10 @@
 package org.sharedhealth.mci.web.mapper;
 
-import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.sharedhealth.mci.web.controller.PatientController;
 import org.sharedhealth.mci.web.model.Patient;
-import org.sharedhealth.mci.web.model.SearchCriteria;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PatientToSearchCriteriaMapperTest {
 
@@ -48,7 +40,6 @@ public class PatientToSearchCriteriaMapperTest {
         patient.setHealthId(healthId);
 
         PatientToSearchCriteriaMapper.convertPatientToSearchCriteria(patient, searchCriteria);
-        assertEquals(patient.getHealthId(),searchCriteria.getHealthId());
         assertEquals("Scott",searchCriteria.getGivenName());
     }
 

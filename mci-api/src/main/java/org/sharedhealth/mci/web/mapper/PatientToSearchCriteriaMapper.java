@@ -1,7 +1,6 @@
 package org.sharedhealth.mci.web.mapper;
 
 import org.sharedhealth.mci.web.model.Patient;
-import org.sharedhealth.mci.web.model.SearchCriteria;
 
 import java.util.ArrayList;
 

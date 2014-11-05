@@ -1,19 +1,20 @@
 package org.sharedhealth.mci.web.service;
 
 
+import org.sharedhealth.mci.web.handler.MCIResponse;
+import org.sharedhealth.mci.web.infrastructure.fr.FacilityRegistryWrapper;
+import org.sharedhealth.mci.web.infrastructure.persistence.PatientRepository;
+import org.sharedhealth.mci.web.mapper.PatientDto;
+import org.sharedhealth.mci.web.mapper.SearchCriteria;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFuture;
+
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import org.sharedhealth.mci.web.handler.MCIResponse;
-import org.sharedhealth.mci.web.infrastructure.fr.FacilityRegistryWrapper;
-import org.sharedhealth.mci.web.infrastructure.persistence.PatientRepository;
-import org.sharedhealth.mci.web.mapper.PatientMapper;
-import org.sharedhealth.mci.web.mapper.SearchQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureAdapter;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Component
 public class PatientService {
@@ -23,8 +24,6 @@ public class PatientService {
     private PatientRepository patientRepository;
     private FacilityRegistryWrapper facilityRegistryWrapper;
     private SettingService settingService;
-    private static Integer perpageMaximimLimit = 25;
-    private static String perPageMaximimLimitNote = "There are more record for this search criteria. Please narrow down your search";
 
     @Autowired
     public PatientService(PatientRepository patientRepository, FacilityRegistryWrapper facilityRegistryWrapper, SettingService settingService) {
@@ -33,48 +32,32 @@ public class PatientService {
         this.settingService = settingService;
     }
 
-    public MCIResponse create(PatientMapper patientMapper) throws ExecutionException, InterruptedException {
-        return patientRepository.create(patientMapper);
+    public MCIResponse createOrUpdate(PatientDto dto) throws ExecutionException, InterruptedException {
+        String hid = dto.getHealthId();
+        if (isNotBlank(hid)) {
+            return patientRepository.update(dto, hid);
+        }
+
+        hid = patientRepository.findHealthId(dto.getNationalId(), dto.getBirthRegistrationNumber(), dto.getUid());
+        if (isNotBlank(hid)) {
+            return patientRepository.update(dto, hid);
+        }
+        return patientRepository.create(dto);
     }
 
-    public ListenableFuture<MCIResponse> update(PatientMapper patientMapper, String healthId) {
-        return patientRepository.update(patientMapper, healthId);
-    }
-
-    public ListenableFuture<PatientMapper> findByHealthId(String healthId) {
+    public ListenableFuture<PatientDto> findByHealthId(String healthId) {
         return patientRepository.findByHealthId(healthId);
     }
 
-    public ListenableFuture<PatientMapper> findByNationalId(String nationalId) {
-        return patientRepository.findByNationalId(nationalId);
+    public List<PatientDto> findAll(SearchCriteria query) {
+        return patientRepository.findAll(query);
     }
 
-    public ListenableFuture<PatientMapper> findByBirthRegistrationNumber(String birthRegistrationNumber) {
-        return patientRepository.findByBirthRegistrationNumber(birthRegistrationNumber);
-    }
-
-    public ListenableFuture<PatientMapper> findByName(String name) {
-        return patientRepository.findByName(name);
-    }
-
-    public ListenableFuture<PatientMapper> findByUid(String uid) {
-        return patientRepository.findByUid(uid);
-    }
-
-    public ListenableFuture<List<PatientMapper>> findAllByQuery(SearchQuery searchQuery) {
-        return new ListenableFutureAdapter<List<PatientMapper>, List<PatientMapper>>(patientRepository.findAllByQuery(searchQuery)) {
-            @Override
-            protected List<PatientMapper> adapt(List<PatientMapper> patientMappers) throws ExecutionException {
-                return patientMappers;
-            }
-        };
-    }
-
-    public ListenableFuture<List<PatientMapper>> findAllByLocations(List<String> locations, String last, Date since) {
+    public ListenableFuture<List<PatientDto>> findAllByLocations(List<String> locations, String last, Date since) {
         return patientRepository.findAllByLocations(locations, last, since);
     }
 
-    public ListenableFuture<List<PatientMapper>> findAllByFacility(String facilityId, String last, Date since) {
+    public ListenableFuture<List<PatientDto>> findAllByFacility(String facilityId, String last, Date since) {
 
         List<String> locations = facilityRegistryWrapper.getCatchmentAreasByFacility(facilityId);
 
@@ -92,7 +75,7 @@ public class PatientService {
     }
 
     public String getPerPageMaximumLimitNote() {
-       String note = settingService.getSettingAsStringByKey("PER_PAGE_MAXIMUM_LIMIT_NOTE");
+        String note = settingService.getSettingAsStringByKey("PER_PAGE_MAXIMUM_LIMIT_NOTE");
 
         if (note == null) {
             return PER_PAGE_MAXIMUM_LIMIT_NOTE;

@@ -1,5 +1,8 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
+import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.select;
+
 public class PatientQueryBuilder {
 
     public static final String HEALTH_ID = "health_id";
@@ -101,5 +104,17 @@ public class PatientQueryBuilder {
 
     public static String getFindByUidQuery() {
         return String.format("SELECT * FROM patient WHERE %s = '%%s'", UID);
+    }
+
+    public static String buildFindHidByNidQuery(String nid) {
+        return select(HEALTH_ID).from("nid_mapping").where(eq(NATIONAL_ID, nid)).getQueryString();
+    }
+
+    public static String buildFindHidByBrnQuery(String brn) {
+        return select(HEALTH_ID).from("brn_mapping").where(eq(BIN_BRN, brn)).getQueryString();
+    }
+
+    public static String buildFindHidByUidQuery(String uid) {
+        return select(HEALTH_ID).from("uid_mapping").where(eq(UID, uid)).getQueryString();
     }
 }
