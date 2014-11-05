@@ -8,7 +8,7 @@ import org.sharedhealth.mci.web.handler.MCIMultiResponse;
 import org.sharedhealth.mci.web.handler.MCIResponse;
 import org.sharedhealth.mci.web.mapper.PaginationQuery;
 import org.sharedhealth.mci.web.mapper.PatientDto;
-import org.sharedhealth.mci.web.mapper.SearchQuery;
+import org.sharedhealth.mci.web.mapper.SearchCriteria;
 import org.sharedhealth.mci.web.service.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,6 @@ public class PatientController {
     private static final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
     private PatientService patientService;
-
 
     @Autowired
     public PatientController(PatientService patientService) {
@@ -83,36 +82,26 @@ public class PatientController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<MCIMultiResponse>> findPatients(@Valid SearchQuery searchQuery, BindingResult bindingResult)
+    public ResponseEntity<MCIMultiResponse> findPatients(@Valid SearchCriteria criteria, BindingResult bindingResult)
             throws ExecutionException, InterruptedException {
+
+        logger.debug("Find all patients  by search query ");
         if (bindingResult.hasErrors()) {
             throw new SearchQueryParameterException(bindingResult);
         }
-        logger.debug("Find all patients  by search query ");
-        final DeferredResult<ResponseEntity<MCIMultiResponse>> deferredResult = new DeferredResult<>();
+
         final int limit = patientService.getPerPageMaximumLimit();
         final String note = patientService.getPerPageMaximumLimitNote();
-        searchQuery.setMaximum_limit(limit);
+        criteria.setMaximum_limit(limit);
 
-        patientService.findAllByQuery(searchQuery).addCallback(new ListenableFutureCallback<List<PatientDto>>() {
-            @Override
-            public void onSuccess(List<PatientDto> results) {
-                HashMap<String, String> additionalInfo = new HashMap<>();
-                if (results.size() > limit) {
-                    results.remove(limit);
-                    additionalInfo.put("note", note);
-                }
-                MCIMultiResponse mciMultiResponse = new MCIMultiResponse<>(results, additionalInfo, OK);
-                deferredResult.setResult(new ResponseEntity<>(mciMultiResponse, mciMultiResponse.httpStatusObject));
-            }
-
-            @Override
-            public void onFailure(Throwable error) {
-                deferredResult.setErrorResult(extractAppException(error));
-            }
-        });
-
-        return deferredResult;
+        List<PatientDto> patients = patientService.findAll(criteria);
+        HashMap<String, String> additionalInfo = new HashMap<>();
+        if (patients.size() > limit) {
+            patients.remove(limit);
+            additionalInfo.put("note", note);
+        }
+        MCIMultiResponse mciMultiResponse = new MCIMultiResponse(patients, additionalInfo, OK);
+        return new ResponseEntity<>(mciMultiResponse, mciMultiResponse.httpStatusObject);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{healthId}", consumes = {APPLICATION_JSON_VALUE})
@@ -145,7 +134,7 @@ public class PatientController {
             @Override
             public void onSuccess(List<PatientDto> results) {
                 HashMap<String, String> additionalInfo = null;
-                MCIMultiResponse mciMultiResponse = new MCIMultiResponse<>(results, additionalInfo, OK);
+                MCIMultiResponse mciMultiResponse = new MCIMultiResponse(results, additionalInfo, OK);
                 deferredResult.setResult(new ResponseEntity<>(mciMultiResponse, mciMultiResponse.httpStatusObject));
             }
 

@@ -5,11 +5,10 @@ import org.sharedhealth.mci.web.handler.MCIResponse;
 import org.sharedhealth.mci.web.infrastructure.fr.FacilityRegistryWrapper;
 import org.sharedhealth.mci.web.infrastructure.persistence.PatientRepository;
 import org.sharedhealth.mci.web.mapper.PatientDto;
-import org.sharedhealth.mci.web.mapper.SearchQuery;
+import org.sharedhealth.mci.web.mapper.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureAdapter;
 
 import java.util.Date;
 import java.util.List;
@@ -50,13 +49,8 @@ public class PatientService {
         return patientRepository.findByHealthId(healthId);
     }
 
-    public ListenableFuture<List<PatientDto>> findAllByQuery(SearchQuery searchQuery) {
-        return new ListenableFutureAdapter<List<PatientDto>, List<PatientDto>>(patientRepository.findAllByQuery(searchQuery)) {
-            @Override
-            protected List<PatientDto> adapt(List<PatientDto> patientDtos) throws ExecutionException {
-                return patientDtos;
-            }
-        };
+    public List<PatientDto> findAll(SearchCriteria query) {
+        return patientRepository.findAll(query);
     }
 
     public ListenableFuture<List<PatientDto>> findAllByLocations(List<String> locations, String last, Date since) {
