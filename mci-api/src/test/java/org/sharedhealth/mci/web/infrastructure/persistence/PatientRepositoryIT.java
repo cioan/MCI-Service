@@ -9,7 +9,7 @@ import org.sharedhealth.mci.web.config.WebMvcConfig;
 import org.sharedhealth.mci.web.exception.HealthIDExistException;
 import org.sharedhealth.mci.web.handler.MCIResponse;
 import org.sharedhealth.mci.web.mapper.Address;
-import org.sharedhealth.mci.web.mapper.PatientMapper;
+import org.sharedhealth.mci.web.mapper.PatientDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.cassandra.core.CassandraTemplate;
@@ -36,7 +36,7 @@ public class PatientRepositoryIT {
     @Autowired
     private PatientRepository patientRepository;
 
-    private PatientMapper patientMapper;
+    private PatientDto patientDto;
     private String nationalId = "1234567890123";
     private String birthRegistrationNumber = "12345678901234567";
     private String uid = "12345678901";
@@ -44,16 +44,16 @@ public class PatientRepositoryIT {
 
     @Before
     public void setup() throws ExecutionException, InterruptedException {
-        patientMapper = new PatientMapper();
-        patientMapper.setNationalId(nationalId);
-        patientMapper.setBirthRegistrationNumber(birthRegistrationNumber);
-        patientMapper.setUid(uid);
-        patientMapper.setGivenName("Scott");
-        patientMapper.setSurName("Tiger");
-        patientMapper.setDateOfBirth("2014-12-01");
-        patientMapper.setGender("M");
-        patientMapper.setOccupation("salaried");
-        patientMapper.setEducationLevel("BA");
+        patientDto = new PatientDto();
+        patientDto.setNationalId(nationalId);
+        patientDto.setBirthRegistrationNumber(birthRegistrationNumber);
+        patientDto.setUid(uid);
+        patientDto.setGivenName("Scott");
+        patientDto.setSurName("Tiger");
+        patientDto.setDateOfBirth("2014-12-01");
+        patientDto.setGender("M");
+        patientDto.setOccupation("salaried");
+        patientDto.setEducationLevel("BA");
 
         Address address = new Address();
         address.setAddressLine("house-10");
@@ -62,19 +62,19 @@ public class PatientRepositoryIT {
         address.setUpazillaId("09");
         address.setCityCorporationId("20");
         address.setWardId("01");
-        patientMapper.setAddress(address);
+        patientDto.setAddress(address);
 
     }
 
     @Test
     public void shouldFindPatientWithMatchingGeneratedHealthId() throws ExecutionException, InterruptedException {
-        MCIResponse mciResponse = patientRepository.create(patientMapper).get();
-        PatientMapper p = patientRepository.findByHealthId(mciResponse.id).get();
+        MCIResponse mciResponse = patientRepository.create(patientDto);
+        PatientDto p = patientRepository.findByHealthId(mciResponse.id).get();
         assertNotNull(p);
-        patientMapper.setHealthId(mciResponse.id);
-        patientMapper.setCreatedAt(p.getCreatedAt());
-        patientMapper.setUpdatedAt(p.getUpdatedAt());
-        assertEquals(patientMapper, p);
+        patientDto.setHealthId(mciResponse.id);
+        patientDto.setCreatedAt(p.getCreatedAt());
+        patientDto.setUpdatedAt(p.getUpdatedAt());
+        assertEquals(patientDto, p);
     }
 
     @Test(expected = ExecutionException.class)
@@ -84,43 +84,43 @@ public class PatientRepositoryIT {
 
     @Test(expected = HealthIDExistException.class)
     public void shouldThrowException_IfHealthIdProvidedForCreate() throws ExecutionException, InterruptedException {
-        patientMapper.setHealthId("12");
-        patientRepository.create(patientMapper).get();
+        patientDto.setHealthId("12");
+        patientRepository.create(patientDto);
     }
 
     @Test
     public void shouldReturnAccepted_IfPatientExistWithProvidedTwoIdFieldsOnCreate() throws ExecutionException, InterruptedException {
-        patientRepository.create(patientMapper).get();
-        patientMapper.setHealthId(null);
-        MCIResponse mciResponse = patientRepository.create(patientMapper).get();
+        patientRepository.create(patientDto);
+        patientDto.setHealthId(null);
+        MCIResponse mciResponse = patientRepository.create(patientDto);
         assertEquals(mciResponse.getHttpStatus(), ACCEPTED.value());
     }
 
     @Test
     public void shouldFindPatientWithMatchingNationalId() throws ExecutionException, InterruptedException {
-        MCIResponse mciResponse = patientRepository.create(patientMapper).get();
-        final PatientMapper p = patientRepository.findByNationalId(nationalId).get();
+        MCIResponse mciResponse = patientRepository.create(patientDto);
+        final PatientDto p = patientRepository.findByNationalId(nationalId);
         assertNotNull(p);
-        patientMapper.setHealthId(mciResponse.id);
-        patientMapper.setCreatedAt(p.getCreatedAt());
-        patientMapper.setUpdatedAt(p.getUpdatedAt());
-        assertEquals(patientMapper, p);
+        patientDto.setHealthId(mciResponse.id);
+        patientDto.setCreatedAt(p.getCreatedAt());
+        patientDto.setUpdatedAt(p.getUpdatedAt());
+        assertEquals(patientDto, p);
     }
 
     @Test(expected = ExecutionException.class)
     public void shouldThrowException_IfPatientDoesNotExistGivenNationalId() throws ExecutionException, InterruptedException {
-        patientRepository.findByNationalId(UUID.randomUUID().toString()).get();
+        patientRepository.findByNationalId(UUID.randomUUID().toString());
     }
 
     @Test
     public void shouldFindPatientWithMatchingBirthRegistrationNumber() throws ExecutionException, InterruptedException {
-        MCIResponse mciResponse = patientRepository.create(patientMapper).get();
-        final PatientMapper p = patientRepository.findByBirthRegistrationNumber(birthRegistrationNumber).get();
+        MCIResponse mciResponse = patientRepository.create(patientDto);
+        final PatientDto p = patientRepository.findByBirthRegistrationNumber(birthRegistrationNumber).get();
         assertNotNull(p);
-        patientMapper.setHealthId(mciResponse.id);
-        patientMapper.setCreatedAt(p.getCreatedAt());
-        patientMapper.setUpdatedAt(p.getUpdatedAt());
-        assertEquals(patientMapper, p);
+        patientDto.setHealthId(mciResponse.id);
+        patientDto.setCreatedAt(p.getCreatedAt());
+        patientDto.setUpdatedAt(p.getUpdatedAt());
+        assertEquals(patientDto, p);
     }
 
     @Test(expected = ExecutionException.class)
@@ -130,14 +130,14 @@ public class PatientRepositoryIT {
 
     @Test
     public void shouldFindPatientWithMatchingUid() throws ExecutionException, InterruptedException {
-        MCIResponse mciResponse = patientRepository.create(patientMapper).get();
+        MCIResponse mciResponse = patientRepository.create(patientDto);
 
-        final PatientMapper p = patientRepository.findByUid(uid).get();
+        final PatientDto p = patientRepository.findByUid(uid).get();
         assertNotNull(p);
-        patientMapper.setHealthId(mciResponse.id);
-        patientMapper.setCreatedAt(p.getCreatedAt());
-        patientMapper.setUpdatedAt(p.getUpdatedAt());
-        assertEquals(patientMapper, p);
+        patientDto.setHealthId(mciResponse.id);
+        patientDto.setCreatedAt(p.getCreatedAt());
+        patientDto.setUpdatedAt(p.getUpdatedAt());
+        assertEquals(patientDto, p);
     }
 
     @Test(expected = ExecutionException.class)

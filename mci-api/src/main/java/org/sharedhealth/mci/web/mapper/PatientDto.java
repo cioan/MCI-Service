@@ -21,7 +21,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 @MaritalRelation(message = "1005", field = "maritalStatus")
 @JsonIgnoreProperties({"created_at"})
-public class PatientMapper {
+public class PatientDto {
 
     @JsonProperty("hid")
     private String healthId;
@@ -360,18 +360,18 @@ public class PatientMapper {
         return null;
     }
 
-    public boolean isSimilarTo(PatientMapper patientMapper) {
+    public boolean isSimilarTo(PatientDto patientDto) {
         int matches = 0;
 
-        if (this.getNationalId() != null && this.getNationalId().equals(patientMapper.getNationalId())) {
+        if (this.getNationalId() != null && this.getNationalId().equals(patientDto.getNationalId())) {
             matches++;
         }
 
-        if (this.getBirthRegistrationNumber() != null && this.getBirthRegistrationNumber().equals(patientMapper.getBirthRegistrationNumber())) {
+        if (this.getBirthRegistrationNumber() != null && this.getBirthRegistrationNumber().equals(patientDto.getBirthRegistrationNumber())) {
             matches++;
         }
 
-        if (this.getUid() != null && this.getUid().equals(patientMapper.getUid())) {
+        if (this.getUid() != null && this.getUid().equals(patientDto.getUid())) {
             matches++;
         }
 
