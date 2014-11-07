@@ -55,23 +55,10 @@ public class PatientController {
     }
 
     @RequestMapping(value = "/{healthId}", method = RequestMethod.GET)
-    public DeferredResult<ResponseEntity<PatientDto>> findByHealthId(@PathVariable String healthId)
-            throws ExecutionException, InterruptedException {
+    public ResponseEntity<PatientDto> findByHealthId(@PathVariable String healthId) throws ExecutionException, InterruptedException {
         logger.debug("Trying to find patient by health id [" + healthId + "]");
-        final DeferredResult<ResponseEntity<PatientDto>> deferredResult = new DeferredResult<>();
-
-        patientService.findByHealthId(healthId).addCallback(new ListenableFutureCallback<PatientDto>() {
-            @Override
-            public void onSuccess(PatientDto result) {
-                deferredResult.setResult(new ResponseEntity<>(result, OK));
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                deferredResult.setErrorResult(extractAppException(e));
-            }
-        });
-        return deferredResult;
+        PatientDto result = patientService.findByHealthId(healthId);
+        return new ResponseEntity<>(result, OK);
     }
 
     private Throwable extractAppException(Throwable e) {

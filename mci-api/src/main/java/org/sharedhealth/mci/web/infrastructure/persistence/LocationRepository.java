@@ -1,5 +1,6 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
+import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.ResultSetFuture;
 import com.datastax.driver.core.Row;
 import com.google.common.util.concurrent.SettableFuture;
@@ -28,30 +29,39 @@ public class LocationRepository extends BaseRepository {
         super(template);
     }
 
-    public ListenableFuture<Location> findByGeoCode(final String geoCode) {
+    public Location findByGeoCode(final String geoCode) {
         String cql = String.format(LOCATION_FIND_BY_GEO_CODE_QUERY, geoCode);
         logger.debug("Find location by geo_code CQL: [" + cql + "]");
-        final SettableFuture<Location> result = SettableFuture.create();
+        ResultSet resultset= null;
+        try {
+            resultset = template.query(cql);
+        }catch (Exception e){
+            logger.error("Error while finding locaiton by geo_code: " + geoCode, e);
 
-        template.queryAsynchronously(cql, new AsynchronousQueryListener() {
-            @Override
-            public void onQueryComplete(ResultSetFuture rsf) {
-                try {
-                    Row row = rsf.get(TIMEOUT_IN_MILLIS, TimeUnit.MILLISECONDS).one();
-                    setLocationOnResult(row, result);
-                } catch (Exception e) {
-                    logger.error("Error while finding locaiton by geo_code: " + geoCode, e);
-                    result.setException(e);
-                }
-            }
-        });
+        }
 
-        return new SimpleListenableFuture<Location, Location>(result) {
-            @Override
-            protected Location adapt(Location adapteeResult) throws ExecutionException {
-                return adapteeResult;
-            }
-        };
+
+//        template.queryAsynchronously(cql, new AsynchronousQueryListener() {
+//            @Override
+//            public void onQueryComplete(ResultSetFuture rsf) {
+//                try {
+//                    Row row = rsf.get(TIMEOUT_IN_MILLIS, TimeUnit.MILLISECONDS).one();
+//                    setLocationOnResult(row, result);
+//                } catch (Exception e) {
+//                    logger.error("Error while finding locaiton by geo_code: " + geoCode, e);
+//                    result.setException(e);
+//                }
+//            }
+//        });
+//
+//        return new SimpleListenableFuture<Location, Location>(result) {
+//            @Override
+//            protected Location adapt(Location adapteeResult) throws ExecutionException {
+//                return adapteeResult;
+//            }
+//        };
+        Row row = resultset.one();
+        return getLocationFromRow(row);
     }
 
     private void setLocationOnResult(Row r, SettableFuture<Location> result) throws InterruptedException, ExecutionException {

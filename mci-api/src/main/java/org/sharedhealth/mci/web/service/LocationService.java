@@ -17,7 +17,7 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    public ListenableFuture<Location> findByGeoCode(String geoCode) {
+    public Location findByGeoCode(String geoCode) {
         return locationRepository.findByGeoCode(geoCode);
     }
 }

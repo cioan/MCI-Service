@@ -1,9 +1,12 @@
-package org.sharedhealth.mci.utils;
+package org.sharedhealth.mci.web.utils;
+
+import org.springframework.stereotype.Component;
 
 import java.nio.ByteBuffer;
 
 import static java.lang.System.getenv;
 
+@Component
 public class UidGenerator {
 
     public static final int EPOCH_TIME = 1325376000;
