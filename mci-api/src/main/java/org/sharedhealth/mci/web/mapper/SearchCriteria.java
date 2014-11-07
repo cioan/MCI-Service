@@ -15,38 +15,6 @@ import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCod
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SearchQueryConstraint(message = "1006")
 public class SearchCriteria extends PaginationQuery {
-    public void setNid(String nid) {
-        this.nid = nid;
-    }
-
-    public void setBrn(String brn) {
-        this.brn = brn;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public void setDivisionId(String divisionId) {
-        this.divisionId = divisionId;
-    }
-
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
-    }
-
-    public void setUpazilaId(String upazilaId) {
-        this.upazilaId = upazilaId;
-    }
-
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
     @JsonProperty("nid")
     @Pattern(regexp = "[\\d]{13}|[\\d]{17}", message = "1002")
     private String nid;
@@ -59,8 +27,11 @@ public class SearchCriteria extends PaginationQuery {
     @Pattern(regexp = "[a-zA-Z0-9]{11}", message = "1002")
     private String uid;
 
+    private String areaCode;
+
+    private String phoneNumber;
+
     @JsonProperty("division_id")
-    //@Pattern(regexp = "[\\d]{6}|[\\d]{8}|[\\d]{10}", message = "1002")
     private String divisionId;
 
     @JsonProperty("district_id")
@@ -68,6 +39,12 @@ public class SearchCriteria extends PaginationQuery {
 
     @JsonProperty("upazila_id")
     private String upazilaId;
+
+    private String cityCorpId;
+
+    private String wardId;
+
+    private String ruralWardId;
 
     @JsonProperty("given_name")
     @Length(max = 100, min = 1, message = "1002")
@@ -81,32 +58,104 @@ public class SearchCriteria extends PaginationQuery {
         return nid;
     }
 
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
     public String getBrn() {
         return brn;
+    }
+
+    public void setBrn(String brn) {
+        this.brn = brn;
     }
 
     public String getUid() {
         return uid;
     }
 
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getDivisionId() {
         return divisionId;
+    }
+
+    public void setDivisionId(String divisionId) {
+        this.divisionId = divisionId;
     }
 
     public String getDistrictId() {
         return districtId;
     }
 
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
+
     public String getUpazilaId() {
         return upazilaId;
+    }
+
+    public void setUpazilaId(String upazilaId) {
+        this.upazilaId = upazilaId;
+    }
+
+    public String getCityCorpId() {
+        return cityCorpId;
+    }
+
+    public void setCityCorpId(String cityCorpId) {
+        this.cityCorpId = cityCorpId;
+    }
+
+    public String getWardId() {
+        return wardId;
+    }
+
+    public void setWardId(String wardId) {
+        this.wardId = wardId;
+    }
+
+    public String getRuralWardId() {
+        return ruralWardId;
+    }
+
+    public void setRuralWardId(String ruralWardId) {
+        this.ruralWardId = ruralWardId;
     }
 
     public String getGivenName() {
         return givenName;
     }
 
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
     public String getSurname() {
         return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     @Override

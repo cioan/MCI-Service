@@ -83,7 +83,7 @@ public class PatientController {
 
         List<PatientDto> patients = patientService.findAll(criteria);
         HashMap<String, String> additionalInfo = new HashMap<>();
-        if (patients.size() > limit) {
+        if (patients!= null && patients.size() > limit) {
             patients.remove(limit);
             additionalInfo.put("note", note);
         }

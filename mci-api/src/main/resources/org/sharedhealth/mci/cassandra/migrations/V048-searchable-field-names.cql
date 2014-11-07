@@ -21,16 +21,20 @@ CREATE TABLE IF NOT EXISTS uid_mapping (
 
 CREATE TABLE IF NOT EXISTS phone_number_mapping (
     phone_number varchar,
+    area_code varchar,
     health_id varchar,
     PRIMARY KEY (phone_number, health_id)
 );
 
-CREATE TABLE IF NOT EXISTS address_mapping (
+CREATE TABLE IF NOT EXISTS name_mapping (
     division_id varchar,
     district_id varchar,
-    upazilla_id varchar,
+    upazila_id varchar,
+    city_corp_id varchar,
+    ward_id varchar,
+    rural_ward_id varchar,
     given_name varchar,
     surname varchar,
     health_id varchar,
-    PRIMARY KEY ((division_id, district_id, upazilla_id), given_name, surname, health_id)
+    PRIMARY KEY ((division_id, district_id, upazila_id), given_name, surname, health_id)
 );

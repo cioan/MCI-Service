@@ -90,24 +90,8 @@ public class PatientQueryBuilder {
 
 
 
-    public static String getFindByHealthIdQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", HEALTH_ID);
-    }
-
-    public static String getFindByNationalIdQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", NATIONAL_ID);
-    }
-
-    public static String getFindByBirthRegistrationNumberQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", BIN_BRN);
-    }
-
-    public static String getFindByNameQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", FULL_NAME);
-    }
-
-    public static String getFindByUidQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", UID);
+    public static String buildFindByHidQuery(String hid) {
+        return select().from("patient").where(eq(HEALTH_ID, hid)).toString();
     }
 
     public static String buildFindHidByNidQuery(String nid) {
@@ -122,11 +106,15 @@ public class PatientQueryBuilder {
         return select(HEALTH_ID).from("uid_mapping").where(eq(UID, uid)).toString();
     }
 
+    public static String buildFindHidByPhoneNumberQuery(String phoneNumber) {
+        return select(HEALTH_ID).from("phone_number_mapping").where(eq("phone_number", phoneNumber)).toString();
+    }
+
     public static String buildFindHidByAddressAndNameQuery(String divisionId, String districtId, String upazilaId, String givenName, String surname) {
-        Where where = select(HEALTH_ID).from("address_mapping")
+        Where where = select(HEALTH_ID).from("name_mapping")
                 .where(eq("division_id", divisionId))
                 .and(eq("district_id", districtId))
-                .and(eq("upazilla_id", upazilaId))
+                .and(eq("upazila_id", upazilaId))
                 .and(eq("given_name", givenName));
 
         if (isNotBlank(surname)) {

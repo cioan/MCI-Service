@@ -26,15 +26,15 @@ public class SearchQueryValidator implements ConstraintValidator<SearchQueryCons
 
         context.disableDefaultConstraintViolation();
 
-        logger.debug("Present address" + value.getPresent_address());
-        logger.debug("Sur name" + value.getSur_name());
+        logger.debug("Present address" + value.getDivisionId());
+        logger.debug("Sur name" + value.getSurname());
 
-        if (StringUtils.isEmpty(value.getPresent_address()) && StringUtils.isNotEmpty(value.getSur_name())) {
+        if (StringUtils.isEmpty(value.getDivisionId()) && StringUtils.isNotEmpty(value.getSurname())) {
             isValid = false;
             addConstraintViolation(context, ERROR_CODE_REQUIRED);
         }
 
-        if (StringUtils.isEmpty(value.getPresent_address()) && StringUtils.isNotEmpty(value.getGiven_name())) {
+        if (StringUtils.isEmpty(value.getDivisionId()) && StringUtils.isNotEmpty(value.getGivenName())) {
             isValid = false;
             addConstraintViolation(context, ERROR_CODE_REQUIRED);
         }
