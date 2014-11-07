@@ -1,7 +1,11 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
+import com.datastax.driver.core.querybuilder.Select;
+
 import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.select;
+import static com.datastax.driver.core.querybuilder.Select.Where;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class PatientQueryBuilder {
 
@@ -107,14 +111,27 @@ public class PatientQueryBuilder {
     }
 
     public static String buildFindHidByNidQuery(String nid) {
-        return select(HEALTH_ID).from("nid_mapping").where(eq(NATIONAL_ID, nid)).getQueryString();
+        return select(HEALTH_ID).from("nid_mapping").where(eq(NATIONAL_ID, nid)).toString();
     }
 
     public static String buildFindHidByBrnQuery(String brn) {
-        return select(HEALTH_ID).from("brn_mapping").where(eq(BIN_BRN, brn)).getQueryString();
+        return select(HEALTH_ID).from("brn_mapping").where(eq(BIN_BRN, brn)).toString();
     }
 
     public static String buildFindHidByUidQuery(String uid) {
-        return select(HEALTH_ID).from("uid_mapping").where(eq(UID, uid)).getQueryString();
+        return select(HEALTH_ID).from("uid_mapping").where(eq(UID, uid)).toString();
+    }
+
+    public static String buildFindHidByAddressAndNameQuery(String divisionId, String districtId, String upazilaId, String givenName, String surname) {
+        Where where = select(HEALTH_ID).from("address_mapping")
+                .where(eq("division_id", divisionId))
+                .and(eq("district_id", districtId))
+                .and(eq("upazilla_id", upazilaId))
+                .and(eq("given_name", givenName));
+
+        if (isNotBlank(surname)) {
+            where = where.and(eq("surname", surname));
+        }
+        return where.toString();
     }
 }

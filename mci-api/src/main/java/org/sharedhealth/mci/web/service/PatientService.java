@@ -45,7 +45,7 @@ public class PatientService {
         return patientRepository.create(dto);
     }
 
-    public ListenableFuture<PatientDto> findByHealthId(String healthId) {
+    public PatientDto findByHealthId(String healthId) {
         return patientRepository.findByHealthId(healthId);
     }
 

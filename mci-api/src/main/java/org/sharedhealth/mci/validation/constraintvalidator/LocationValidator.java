@@ -90,7 +90,7 @@ public class LocationValidator implements ConstraintValidator<Location, Address>
     private boolean isExistInLocationRegistry(String geoCode) {
         logger.debug("Validation testing for code : [" + geoCode + "]");
         try {
-            org.sharedhealth.mci.web.mapper.Location location = locationService.findByGeoCode(geoCode).get();
+            org.sharedhealth.mci.web.mapper.Location location = locationService.findByGeoCode(geoCode);
 
             if (!StringUtils.isBlank(location.getGeoCode())) {
                 return true;
