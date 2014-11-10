@@ -1,8 +1,5 @@
 package org.sharedhealth.mci.validation.constraintvalidator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import org.apache.commons.lang3.StringUtils;
 import org.sharedhealth.mci.validation.constraints.Location;
 import org.sharedhealth.mci.web.mapper.Address;
@@ -11,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 @Component
 public class LocationValidator implements ConstraintValidator<Location, Address> {
@@ -31,7 +31,7 @@ public class LocationValidator implements ConstraintValidator<Location, Address>
 
     @Override
     public void initialize(Location constraintAnnotation) {
-            this.countryCode = constraintAnnotation.country_code();
+        this.countryCode = constraintAnnotation.country_code();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class LocationValidator implements ConstraintValidator<Location, Address>
             return true;
         }
 
-        if(StringUtils.isNotEmpty(this.countryCode) && value.getCountryCode() != null && !value.getCountryCode().equals(this.countryCode)) {
+        if (StringUtils.isNotEmpty(this.countryCode) && value.getCountryCode() != null && !value.getCountryCode().equals(this.countryCode)) {
             isValid = false;
             //addConstraintViolation(context, ERROR_CODE_PATTERN, "countryCode");
         }
@@ -79,7 +79,7 @@ public class LocationValidator implements ConstraintValidator<Location, Address>
 
         isValid = isValid && isExistInLocationRegistry(geoCode);
 
-        if(!isValid) {
+        if (!isValid) {
             addConstraintViolation(context, context.getDefaultConstraintMessageTemplate());
         }
 
@@ -90,7 +90,7 @@ public class LocationValidator implements ConstraintValidator<Location, Address>
     private boolean isExistInLocationRegistry(String geoCode) {
         logger.debug("Validation testing for code : [" + geoCode + "]");
         try {
-            org.sharedhealth.mci.web.mapper.Location location = locationService.findByGeoCode(geoCode).get();
+            org.sharedhealth.mci.web.mapper.Location location = locationService.findByGeoCode(geoCode);
 
             if (!StringUtils.isBlank(location.getGeoCode())) {
                 return true;

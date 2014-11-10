@@ -1,10 +1,5 @@
 package org.sharedhealth.mci.web.mapper;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,11 +12,16 @@ import org.sharedhealth.mci.validation.constraints.*;
 import org.sharedhealth.mci.validation.constraints.Location;
 import org.sharedhealth.mci.validation.group.RequiredGroup;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.List;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 @MaritalRelation(message = "1005", field = "maritalStatus")
 @JsonIgnoreProperties({"created_at"})
-public class PatientMapper {
+public class PatientDto {
 
     @JsonProperty("hid")
     private String healthId;
@@ -43,7 +43,7 @@ public class PatientMapper {
 
     @JsonProperty("given_name")
     @NotNull(message = "1001", groups = RequiredGroup.class)
-    @Length(max = 100, min=1, message = "1002")
+    @Length(max = 100, min = 1, message = "1002")
     private String givenName;
 
     @JsonProperty("sur_name")
@@ -54,7 +54,7 @@ public class PatientMapper {
     @JsonProperty("date_of_birth")
     @NotNull(message = "1001", groups = RequiredGroup.class)
     @Date(format = "yyyy-MM-dd", message = "1002")
-    @Length(min=1,max = 10,message = "1002")
+    @Length(min = 1, max = 10, message = "1002")
     private String dateOfBirth;
 
     @JsonProperty("gender")
@@ -69,7 +69,7 @@ public class PatientMapper {
 
     @JsonProperty("edu_level")
     @JsonInclude(NON_EMPTY)
-    @Code(type="education_level", regexp = "[\\d]{2}", message = "1004")
+    @Code(type = "education_level", regexp = "[\\d]{2}", message = "1004")
     private String educationLevel;
 
     @JsonProperty("relations")
@@ -115,7 +115,7 @@ public class PatientMapper {
     @JsonProperty("present_address")
     @NotNull(message = "1001", groups = RequiredGroup.class)
     @Valid
-    @Location(message = "1004",country_code = "050")
+    @Location(message = "1004", country_code = "050")
     private Address address;
 
     @JsonProperty("primary_contact")
@@ -360,18 +360,18 @@ public class PatientMapper {
         return null;
     }
 
-    public boolean isSimilarTo(PatientMapper patientMapper) {
+    public boolean isSimilarTo(PatientDto patientDto) {
         int matches = 0;
 
-        if (this.getNationalId() != null && this.getNationalId().equals(patientMapper.getNationalId())) {
+        if (this.getNationalId() != null && this.getNationalId().equals(patientDto.getNationalId())) {
             matches++;
         }
 
-        if (this.getBirthRegistrationNumber() != null && this.getBirthRegistrationNumber().equals(patientMapper.getBirthRegistrationNumber())) {
+        if (this.getBirthRegistrationNumber() != null && this.getBirthRegistrationNumber().equals(patientDto.getBirthRegistrationNumber())) {
             matches++;
         }
 
-        if (this.getUid() != null && this.getUid().equals(patientMapper.getUid())) {
+        if (this.getUid() != null && this.getUid().equals(patientDto.getUid())) {
             matches++;
         }
 

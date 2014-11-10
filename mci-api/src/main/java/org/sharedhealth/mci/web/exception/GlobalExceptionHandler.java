@@ -1,13 +1,10 @@
 package org.sharedhealth.mci.web.exception;
 
-import java.lang.String;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import org.sharedhealth.mci.web.handler.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,25 +13,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.sharedhealth.mci.web.handler.ErrorHandler;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
+import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    
+
     public static final int ERROR_CODE_JSON_PARSE = 2001;
     public static final int ERROR_CODE_UNRECOGNIZED_FIELD = 2002;
     public static final int ERROR_CODE_FIELD_NOT_PERMITTED = 3001;
     public static final int ERROR_SEARCH_PARAMETER = 1006;
 
-    
-    
+
     @ResponseStatus(value = BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     @ResponseBody
@@ -114,13 +108,13 @@ public class GlobalExceptionHandler {
         msg = "hid field is not permitted";
         field = "hid";
 
-        return errorHandler.handleHealthIDExistError(errorHandler, code, msg,field);
+        return errorHandler.handleHealthIDExistError(errorHandler, code, msg, field);
     }
 
     @ResponseStatus(value = BAD_REQUEST)
-    @ExceptionHandler(SearchQueryParameterException.class)
+    @ExceptionHandler(SearchCriteriaParameterException.class)
     @ResponseBody
-    public ErrorHandler searchQueryParameterException(SearchQueryParameterException e) {
+    public ErrorHandler searchQueryParameterException(SearchCriteriaParameterException e) {
         logger.error("Handling Search Query parameter exception. ", e);
         int code;
         String msg;

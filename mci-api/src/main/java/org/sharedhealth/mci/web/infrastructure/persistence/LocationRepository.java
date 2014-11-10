@@ -1,21 +1,17 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import com.datastax.driver.core.ResultSetFuture;
+import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.google.common.util.concurrent.SettableFuture;
 import org.sharedhealth.mci.web.mapper.Location;
-import org.sharedhealth.mci.web.utils.concurrent.SimpleListenableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cassandra.core.AsynchronousQueryListener;
-import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class LocationRepository extends BaseRepository {
@@ -24,34 +20,43 @@ public class LocationRepository extends BaseRepository {
     public static final String LOCATION_FIND_BY_GEO_CODE_QUERY = "SELECT * FROM locations WHERE geo_code = '%s'";
 
     @Autowired
-    public LocationRepository(@Qualifier("MCICassandraTemplate") CassandraOperations cassandraOperations) {
-        super(cassandraOperations);
+    public LocationRepository(@Qualifier("MCICassandraTemplate") CassandraTemplate template) {
+        super(template);
     }
 
-    public ListenableFuture<Location> findByGeoCode(final String geoCode) {
+    public Location findByGeoCode(final String geoCode) {
         String cql = String.format(LOCATION_FIND_BY_GEO_CODE_QUERY, geoCode);
         logger.debug("Find location by geo_code CQL: [" + cql + "]");
-        final SettableFuture<Location> result = SettableFuture.create();
+        ResultSet resultset = null;
+        try {
+            resultset = template.query(cql);
+        } catch (Exception e) {
+            logger.error("Error while finding locaiton by geo_code: " + geoCode, e);
 
-        cassandraOperations.queryAsynchronously(cql, new AsynchronousQueryListener() {
-            @Override
-            public void onQueryComplete(ResultSetFuture rsf) {
-                try {
-                    Row row = rsf.get(TIMEOUT_IN_MILLIS, TimeUnit.MILLISECONDS).one();
-                    setLocationOnResult(row, result);
-                } catch (Exception e) {
-                    logger.error("Error while finding locaiton by geo_code: " + geoCode, e);
-                    result.setException(e);
-                }
-            }
-        });
+        }
 
-        return new SimpleListenableFuture<Location, Location>(result) {
-            @Override
-            protected Location adapt(Location adapteeResult) throws ExecutionException {
-                return adapteeResult;
-            }
-        };
+
+//        template.queryAsynchronously(cql, new AsynchronousQueryListener() {
+//            @Override
+//            public void onQueryComplete(ResultSetFuture rsf) {
+//                try {
+//                    Row row = rsf.get(TIMEOUT_IN_MILLIS, TimeUnit.MILLISECONDS).one();
+//                    setLocationOnResult(row, result);
+//                } catch (Exception e) {
+//                    logger.error("Error while finding locaiton by geo_code: " + geoCode, e);
+//                    result.setException(e);
+//                }
+//            }
+//        });
+//
+//        return new SimpleListenableFuture<Location, Location>(result) {
+//            @Override
+//            protected Location adapt(Location adapteeResult) throws ExecutionException {
+//                return adapteeResult;
+//            }
+//        };
+        Row row = resultset.one();
+        return getLocationFromRow(row);
     }
 
     private void setLocationOnResult(Row r, SettableFuture<Location> result) throws InterruptedException, ExecutionException {

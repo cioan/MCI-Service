@@ -15,7 +15,8 @@ public class MasterData {
     @Column("value")
     private String value;
 
-    public MasterData(){}
+    public MasterData() {
+    }
 
     public MasterData(String type, String key, String value) {
         this.pk = new MasterDataKey(type, key);

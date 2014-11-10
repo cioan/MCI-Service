@@ -1,6 +1,6 @@
 package org.sharedhealth.mci.validation.constraints;
 
-import org.sharedhealth.mci.validation.constraintvalidator.SearchQueryValidator;
+import org.sharedhealth.mci.validation.constraintvalidator.SearchCriteriaValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -14,9 +14,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = SearchQueryValidator.class)
+@Constraint(validatedBy = SearchCriteriaValidator.class)
 @Documented
-public @interface SearchQueryConstraint {
+public @interface SearchCriteriaConstraint {
     String message() default "1006";
 
     Class<?>[] groups() default {};
@@ -27,8 +27,7 @@ public @interface SearchQueryConstraint {
     @Target({TYPE, ANNOTATION_TYPE})
     @Retention(RUNTIME)
     @Documented
-        @interface List
-    {
-        SearchQueryConstraint[] value();
+    @interface List {
+        SearchCriteriaConstraint[] value();
     }
 }

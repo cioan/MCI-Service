@@ -1,8 +1,5 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
 import com.datastax.driver.core.ResultSetFuture;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
@@ -17,9 +14,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cassandra.core.AsynchronousQueryListener;
-import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class SettingRepository extends BaseRepository {
@@ -27,8 +27,8 @@ public class SettingRepository extends BaseRepository {
     private static final Logger logger = LoggerFactory.getLogger(LocationRepository.class);
 
     @Autowired
-    public SettingRepository(@Qualifier("MCICassandraTemplate") CassandraOperations cassandraOperations) {
-        super(cassandraOperations);
+    public SettingRepository(@Qualifier("MCICassandraTemplate") CassandraTemplate template) {
+        super(template);
     }
 
     public ListenableFuture<Setting> findSettingListenableFutureByKey(final String key) {
@@ -39,7 +39,7 @@ public class SettingRepository extends BaseRepository {
 
         select.where(QueryBuilder.eq("key", key));
 
-        cassandraOperations.queryAsynchronously(select, new AsynchronousQueryListener() {
+        template.queryAsynchronously(select, new AsynchronousQueryListener() {
             @Override
             public void onQueryComplete(ResultSetFuture rsf) {
                 try {
@@ -78,7 +78,7 @@ public class SettingRepository extends BaseRepository {
 
     @CacheEvict("mciSettings")
     public void save(Setting setting) {
-        cassandraOperations.insert(setting);
+        template.insert(setting);
     }
 
     @Cacheable({"mciSettings"})

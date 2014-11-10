@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.java.AbstractCassandraConfiguration;
-import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
@@ -40,7 +39,7 @@ public class MCICassandraConfig extends AbstractCassandraConfiguration {
     }
 
     @Bean(name = "MCICassandraTemplate")
-    public CassandraOperations CassandraTemplate() throws Exception {
+    public CassandraTemplate CassandraTemplate() throws Exception {
         return new CassandraTemplate(session().getObject());
     }
 

@@ -2,16 +2,16 @@ package org.sharedhealth.mci.web.exception;
 
 import org.springframework.validation.BindingResult;
 
-public class SearchQueryParameterException extends RuntimeException {
+public class SearchCriteriaParameterException extends RuntimeException {
 
     private BindingResult bindingResult;
 
-    public SearchQueryParameterException(BindingResult result) {
+    public SearchCriteriaParameterException(BindingResult result) {
         super(result.toString());
         bindingResult = result;
     }
 
-    public SearchQueryParameterException(String message) {
+    public SearchCriteriaParameterException(String message) {
         super(message);
     }
 

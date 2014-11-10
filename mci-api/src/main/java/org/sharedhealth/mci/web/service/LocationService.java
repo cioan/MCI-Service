@@ -5,7 +5,6 @@ import org.sharedhealth.mci.web.infrastructure.persistence.LocationRepository;
 import org.sharedhealth.mci.web.mapper.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFuture;
 
 @Component
 public class LocationService {
@@ -17,7 +16,7 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    public ListenableFuture<Location> findByGeoCode(String geoCode) {
+    public Location findByGeoCode(String geoCode) {
         return locationRepository.findByGeoCode(geoCode);
     }
 }

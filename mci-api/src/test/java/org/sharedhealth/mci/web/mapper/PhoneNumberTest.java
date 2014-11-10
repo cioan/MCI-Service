@@ -1,15 +1,15 @@
 package org.sharedhealth.mci.web.mapper;
 
+import org.hibernate.validator.HibernateValidator;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.sharedhealth.mci.validation.group.RequiredOnUpdateGroup;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
-
-import org.hibernate.validator.HibernateValidator;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.sharedhealth.mci.validation.group.RequiredOnUpdateGroup;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,55 +25,55 @@ public class PhoneNumberTest {
     }
 
     @Test
-    public void ShouldFailIFCountryCodeIsInvalid(){
+    public void ShouldFailIFCountryCodeIsInvalid() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "countryCode", "adfdfdsdfdfdfdfdfdffdfdfdfdf");
         assertEquals("1002", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
-    public void ShouldPassIFCountryCodeIsvalid(){
+    public void ShouldPassIFCountryCodeIsvalid() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "countryCode", "88");
         assertEquals(0, constraintViolations.size());
     }
 
     @Test
-    public void ShouldFailIFAreaCodeIsInvalid(){
+    public void ShouldFailIFAreaCodeIsInvalid() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "areaCode", "adfdfdsdfdfdfdfdfdffdfdfdfdf");
         assertEquals("1002", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
-    public void ShouldPassIFAreaCodeIsvalid(){
+    public void ShouldPassIFAreaCodeIsvalid() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "areaCode", "02");
         assertEquals(0, constraintViolations.size());
     }
 
     @Test
-    public void ShouldFailIFExtensionIsInvalid(){
+    public void ShouldFailIFExtensionIsInvalid() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "extension", "adfdfdsdfdfdfdfdfdff");
         assertEquals("1002", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
-    public void ShouldPassIFExtensionIsvalid(){
+    public void ShouldPassIFExtensionIsvalid() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "extension", "122");
         assertEquals(0, constraintViolations.size());
     }
 
     @Test
-    public void ShouldFailIFPhoneNoIsMorThan12Digit(){
+    public void ShouldFailIFPhoneNoIsMorThan12Digit() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "number", "1234567890123455666");
         assertEquals("1002", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
-    public void ShouldFailIFPhoneNoIsInvalid(){
+    public void ShouldFailIFPhoneNoIsInvalid() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "number", "aaa");
         assertEquals("1002", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
-    public void ShouldPassIFPhoneNoIsvalid(){
+    public void ShouldPassIFPhoneNoIsvalid() {
         Set<ConstraintViolation<PhoneNumber>> constraintViolations = validator.validateValue(PhoneNumber.class, "number", "1234566788");
         assertEquals(0, constraintViolations.size());
     }

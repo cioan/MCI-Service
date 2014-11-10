@@ -1,8 +1,5 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
 import com.datastax.driver.core.ResultSetFuture;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
@@ -16,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cassandra.core.AsynchronousQueryListener;
-import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class MasterDataRepository extends BaseRepository {
@@ -26,8 +26,8 @@ public class MasterDataRepository extends BaseRepository {
     private static final Logger logger = LoggerFactory.getLogger(LocationRepository.class);
 
     @Autowired
-    public MasterDataRepository(@Qualifier("MCICassandraTemplate") CassandraOperations cassandraOperations) {
-        super(cassandraOperations);
+    public MasterDataRepository(@Qualifier("MCICassandraTemplate") CassandraTemplate template) {
+        super(template);
     }
 
     public ListenableFuture<MasterData> findDataListenableFutureByKey(final String type, final String key) {
@@ -39,7 +39,7 @@ public class MasterDataRepository extends BaseRepository {
         select.where(QueryBuilder.eq("type", type));
         select.where(QueryBuilder.eq("key", key));
 
-        cassandraOperations.queryAsynchronously(select, new AsynchronousQueryListener() {
+        template.queryAsynchronously(select, new AsynchronousQueryListener() {
             @Override
             public void onQueryComplete(ResultSetFuture rsf) {
                 try {
@@ -78,7 +78,7 @@ public class MasterDataRepository extends BaseRepository {
         try {
             masterData = findDataListenableFutureByKey(type, key).get();
         } catch (Exception e) {
-            logger.debug("Could not find Setting for key : [" + key + "] of type [" + type + "]" );
+            logger.debug("Could not find Setting for key : [" + key + "] of type [" + type + "]");
         }
 
         return masterData;

@@ -13,10 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.givenThat;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -34,7 +31,7 @@ public class FacilityRegistryWrapperTest extends TestCase {
     private FacilityRegistryWrapper fr;
 
     @Test
-    public void shouldFetchAFacilityByFacilityId() throws Exception{
+    public void shouldFetchAFacilityByFacilityId() throws Exception {
         String facilityId = "10010408";
 
         givenThat(get(urlEqualTo("/api/1.0/facilities/" + facilityId + ".json"))

@@ -1,8 +1,5 @@
 package org.sharedhealth.mci.web.handler;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,11 +8,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.http.HttpStatus;
 
+import java.util.HashMap;
+import java.util.List;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
-@JsonIgnoreProperties(value = { "httpStatusObject" })
-@JsonPropertyOrder({"http_status","results","additional_info"})
-public class MCIMultiResponse <T, A>{
+@JsonIgnoreProperties(value = {"httpStatusObject"})
+@JsonPropertyOrder({"http_status", "results", "additional_info"})
+public class MCIMultiResponse<T, A> {
 
     @JsonProperty("http_status")
     public int httpStatus;

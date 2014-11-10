@@ -1,11 +1,11 @@
 package org.sharedhealth.mci.web.mapper;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.sharedhealth.mci.validation.group.RequiredOnUpdateGroup;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 

@@ -1,5 +1,10 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
+import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.select;
+import static com.datastax.driver.core.querybuilder.Select.Where;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 public class PatientQueryBuilder {
 
     public static final String HEALTH_ID = "health_id";
@@ -17,11 +22,11 @@ public class PatientQueryBuilder {
     public static final String UPAZILLA_ID = "upazilla_id";
     public static final String UNION_ID = "union_id";
     public static final String BIN_BRN = "bin_brn";
-    public static final String UID ="uid";
-    public static final String FATHERS_NAME_BANGLA ="fathers_name_bangla";
-    public static final String FATHERS_GIVEN_NAME ="fathers_given_name";
-    public static final String FATHERS_SUR_NAME ="fathers_sur_name";
-    public static final String FATHERS_UID ="fathers_uid";
+    public static final String UID = "uid";
+    public static final String FATHERS_NAME_BANGLA = "fathers_name_bangla";
+    public static final String FATHERS_GIVEN_NAME = "fathers_given_name";
+    public static final String FATHERS_SUR_NAME = "fathers_sur_name";
+    public static final String FATHERS_UID = "fathers_uid";
     public static final String FATHERS_NID = "fathers_nid";
     public static final String FATHERS_BRN = "fathers_brn";
     public static final String MOTHERS_NAME_BANGLA = "mothers_name_bangla";
@@ -82,24 +87,36 @@ public class PatientQueryBuilder {
     public static final String PRIMARY_CONTACT_NUMBER_EXTENSION = "primary_contact_number_extension";
 
 
-
-    public static String getFindByHealthIdQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", HEALTH_ID);
+    public static String buildFindByHidQuery(String hid) {
+        return select().from("patient").where(eq(HEALTH_ID, hid)).toString();
     }
 
-    public static String getFindByNationalIdQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", NATIONAL_ID);
+    public static String buildFindHidByNidQuery(String nid) {
+        return select(HEALTH_ID).from("nid_mapping").where(eq(NATIONAL_ID, nid)).toString();
     }
 
-    public static String getFindByBirthRegistrationNumberQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", BIN_BRN);
+    public static String buildFindHidByBrnQuery(String brn) {
+        return select(HEALTH_ID).from("brn_mapping").where(eq(BIN_BRN, brn)).toString();
     }
 
-    public static String getFindByNameQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", FULL_NAME);
+    public static String buildFindHidByUidQuery(String uid) {
+        return select(HEALTH_ID).from("uid_mapping").where(eq(UID, uid)).toString();
     }
 
-    public static String getFindByUidQuery() {
-        return String.format("SELECT * FROM patient WHERE %s = '%%s'", UID);
+    public static String buildFindHidByPhoneNumberQuery(String phoneNumber) {
+        return select(HEALTH_ID).from("phone_number_mapping").where(eq("phone_number", phoneNumber)).toString();
+    }
+
+    public static String buildFindHidByAddressAndNameQuery(String divisionId, String districtId, String upazilaId, String givenName, String surname) {
+        Where where = select(HEALTH_ID).from("name_mapping")
+                .where(eq("division_id", divisionId))
+                .and(eq("district_id", districtId))
+                .and(eq("upazila_id", upazilaId))
+                .and(eq("given_name", givenName));
+
+        if (isNotBlank(surname)) {
+            where = where.and(eq("surname", surname));
+        }
+        return where.toString();
     }
 }

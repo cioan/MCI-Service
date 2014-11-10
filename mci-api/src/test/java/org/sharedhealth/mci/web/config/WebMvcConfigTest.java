@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class WebMvcConfigTest extends WebMvcConfig {
 
     @Bean(name = "validator")
-    public LocalValidatorFactoryBean validator(){
+    public LocalValidatorFactoryBean validator() {
         return new LocalValidatorFactoryBean();
     }
 }

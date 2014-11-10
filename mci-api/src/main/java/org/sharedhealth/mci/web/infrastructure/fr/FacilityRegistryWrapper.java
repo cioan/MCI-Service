@@ -1,8 +1,5 @@
 package org.sharedhealth.mci.web.infrastructure.fr;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import org.sharedhealth.mci.web.config.MCIProperties;
 import org.sharedhealth.mci.web.exception.FacilityNotFoundException;
 import org.sharedhealth.mci.web.mapper.Facility;
@@ -20,6 +17,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureAdapter;
 import org.springframework.web.client.AsyncRestTemplate;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 @Component
@@ -68,7 +68,7 @@ public class FacilityRegistryWrapper {
         try {
             facility = facilityResponse.get();
         } catch (Exception e) {
-           throw new FacilityNotFoundException();
+            throw new FacilityNotFoundException();
         }
 
         return facility.getCatchments();

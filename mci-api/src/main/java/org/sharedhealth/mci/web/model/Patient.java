@@ -1,14 +1,14 @@
 package org.sharedhealth.mci.web.model;
 
 
-import java.util.Date;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
+
+import java.util.Date;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.sharedhealth.mci.utils.DateUtil.string2Date;
@@ -927,11 +927,11 @@ public class Patient {
     public String getLocationLevel3() {
         String ut = "";
 
-        if(this.getUpazillaId() != null) {
+        if (this.getUpazillaId() != null) {
             ut = this.getUpazillaId();
         }
 
-        if(this.getThanaId() != null) {
+        if (this.getThanaId() != null) {
             ut = ut + this.getThanaId();
         }
 
@@ -953,11 +953,11 @@ public class Patient {
     public String getLocationLevel5() {
         String uw = "";
 
-        if(this.getUnionId() != null) {
+        if (this.getUnionId() != null) {
             uw = this.getUnionId();
         }
 
-        if(this.getWardId() != null) {
+        if (this.getWardId() != null) {
             uw = uw + this.getWardId();
         }
 

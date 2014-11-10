@@ -1,7 +1,5 @@
 package org.sharedhealth.mci.web.infrastructure.persistence;
 
-import java.util.concurrent.ExecutionException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +8,12 @@ import org.sharedhealth.mci.web.config.WebMvcConfig;
 import org.sharedhealth.mci.web.model.MasterData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,7 +26,7 @@ public class MasterDataRepositoryIT {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     @Qualifier("MCICassandraTemplate")
-    private CassandraOperations cqlTemplate;
+    private CassandraTemplate cqlTemplate;
 
     @Autowired
     private MasterDataRepository masterDataRepository;
