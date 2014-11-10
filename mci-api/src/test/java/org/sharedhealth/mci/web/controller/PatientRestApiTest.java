@@ -75,7 +75,7 @@ public class PatientRestApiTest {
 
         PhoneNumber phoneNumber = new PhoneNumber();
         phoneNumber.setNumber("1716528608");
-        phoneNumber.setCountryCode("880");
+        phoneNumber.setAreaCode("880");
         phoneNumber.setExtension("02");
         phoneNumber.setAreaCode("01");
 
@@ -90,7 +90,6 @@ public class PatientRestApiTest {
         address.setCityCorporationId("20");
         address.setVillage("10");
         address.setWardId("01");
-        address.setCountryCode("050");
 
         patientDto.setAddress(address);
     }
@@ -319,13 +318,13 @@ public class PatientRestApiTest {
         createPatient(json);
 
         Address address = patientDto.getAddress();
-        String url = API_END_POINT + "?phone_number=1716528608&country_code=880&division_id=" + address.getDivisionId()
+        String url = API_END_POINT + "?phone_number=1716528608&division_id=" + address.getDivisionId()
                 + "&district_id=" + address.getDistrictId() + "&upazila_id=" + address.getUpazillaId();
 
         mockMvc.perform(get(url)
                 .accept(APPLICATION_JSON).content(json).contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result[0].phone_number", is("1716528608")))
+                .andExpect(jsonPath("$.results[0].phone_number.number", is("1716528608")))
                 .andReturn();
     }
 

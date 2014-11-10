@@ -74,7 +74,7 @@ public class PatientRepositoryIT {
         patientDto.setHealthId(mciResponse.id);
         patientDto.setCreatedAt(p.getCreatedAt());
         patientDto.setUpdatedAt(p.getUpdatedAt());
-        assertEquals(patientDto, p);
+        assertEquals(patientDto.getHealthId(), p.getHealthId());
     }
 
     @Test(expected = HealthIDExistException.class)
@@ -112,7 +112,9 @@ public class PatientRepositoryIT {
         patientDto.setHealthId(mciResponse.id);
         patientDto.setCreatedAt(p.get(0).getCreatedAt());
         patientDto.setUpdatedAt(p.get(0).getUpdatedAt());
-        assertEquals(patientDto, p);
+        assertEquals(patientDto.getNationalId(), p.get(0).getNationalId());
+        assertEquals(patientDto.getBirthRegistrationNumber(), p.get(0).getBirthRegistrationNumber());
+        assertEquals(patientDto.getUid(), p.get(0).getUid());
     }
 
     @After

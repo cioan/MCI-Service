@@ -312,7 +312,7 @@ public class PatientRepository extends BaseRepository {
         phoneNumber.setCountryCode(patient.getPhoneNumberCountryCode());
         phoneNumber.setExtension(patient.getPhoneNumberExtension());
 
-        primaryContactNumber.setNumber(patient.getPrimaryContact());
+        primaryContactNumber.setNumber(patient.getPrimaryCellNo());
         primaryContactNumber.setAreaCode(patient.getPrimaryContactNumberAreaCode());
         primaryContactNumber.setCountryCode(patient.getPrimaryContactNumberCountryCode());
         primaryContactNumber.setExtension(patient.getPrimaryContactNumberExtension());

@@ -195,9 +195,9 @@ public class PatientControllerTest {
     public void shouldUpdatePatientAndReturnHealthId() throws Exception {
         String json = new ObjectMapper().writeValueAsString(patientDto);
         String healthId = "healthId-100";
-        MCIResponse mciResponse = new MCIResponse(healthId, ACCEPTED);
-        when(locationService.findByGeoCode(GEO_CODE)).thenReturn(location);
-        when(patientService.createOrUpdate(patientDto)).thenReturn(mciResponse);
+        patientDto.setHealthId(healthId);
+        //when(locationService.findByGeoCode(GEO_CODE)).thenReturn(location);
+        when(patientService.createOrUpdate(patientDto)).thenReturn(new MCIResponse(healthId, ACCEPTED));
 
         mockMvc.perform(put(PUT_API_END_POINT, healthId).content(json).contentType(APPLICATION_JSON))
                 .andExpect(status().isAccepted());
