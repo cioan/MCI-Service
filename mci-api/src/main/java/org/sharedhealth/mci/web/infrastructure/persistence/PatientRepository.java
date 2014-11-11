@@ -76,9 +76,14 @@ public class PatientRepository extends BaseRepository {
 
         Batch batch = QueryBuilder.batch();
         CassandraConverter converter = template.getConverter();
-
         batch.add(createInsertQuery("patient", p, null, converter));
+        buildBatchForMapping(p, healthId, batch, converter);
 
+        template.execute(batch);
+        return new MCIResponse(p.getHealthId(), HttpStatus.CREATED);
+    }
+
+    private void buildBatchForMapping(Patient p, String healthId, Batch batch, CassandraConverter converter) {
         String nationalId = p.getNationalId();
         if (isNotBlank(nationalId)) {
             batch.add(createInsertQuery("nid_mapping", new NidMapping(nationalId, healthId), null, converter));
@@ -107,9 +112,6 @@ public class PatientRepository extends BaseRepository {
         if (AppUtils.isNotBlank(divisionId, districtId, upazilaId, givenName, surname)) {
             batch.add(createInsertQuery("name_mapping", new NameMapping(divisionId, districtId, upazilaId, givenName, surname, healthId), null, converter));
         }
-
-        template.execute(batch);
-        return new MCIResponse(p.getHealthId(), HttpStatus.CREATED);
     }
 
     public List<PatientDto> findAll(SearchCriteria criteria) {

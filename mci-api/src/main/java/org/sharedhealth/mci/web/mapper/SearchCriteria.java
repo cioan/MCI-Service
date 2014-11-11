@@ -1,12 +1,16 @@
 package org.sharedhealth.mci.web.mapper;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.sharedhealth.mci.validation.constraints.Length;
 import org.sharedhealth.mci.validation.constraints.SearchCriteriaConstraint;
+import org.sharedhealth.mci.validation.group.RequiredOnUpdateGroup;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
 
@@ -27,27 +31,44 @@ public class SearchCriteria extends PaginationQuery {
     private String uid;
 
     @JsonProperty("area_code")
+    @JsonInclude(NON_EMPTY)
+    @Pattern(regexp = "[0-9]*$", message = "1002")
     private String area_code;
 
     @JsonProperty("phone_number")
+    @JsonInclude(NON_EMPTY)
+    @NotNull(message = "1001", groups = RequiredOnUpdateGroup.class)
+    @Pattern(regexp = "[0-9]{1,12}$", message = "1002")
     private String phone_number;
 
     @JsonProperty("division_id")
+    @JsonInclude(NON_EMPTY)
+    @Pattern(regexp = "[\\d]{2}", message = "1002")
     private String division_id;
 
     @JsonProperty("district_id")
+    @JsonInclude(NON_EMPTY)
+    @Pattern(regexp = "[\\d]{2}", message = "1002")
     private String district_id;
 
     @JsonProperty("upazila_id")
+    @JsonInclude(NON_EMPTY)
+    @Pattern(regexp = "[\\d]{2}", message = "1002")
     private String upazila_id;
 
     @JsonProperty("city_corp_id")
+    @JsonInclude(NON_EMPTY)
+    @Pattern(regexp = "[\\d]{2}", message = "1002")
     private String city_corp_id;
 
     @JsonProperty("ward_id")
+    @JsonInclude(NON_EMPTY)
+    @Pattern(regexp = "[\\d]{2}", message = "1002")
     private String ward_id;
 
     @JsonProperty("rural_ward_id")
+    @JsonInclude(NON_EMPTY)
+    @Pattern(regexp = "[\\d]{2}", message = "1002")
     private String rural_ward_id;
 
     @JsonProperty("given_name")
