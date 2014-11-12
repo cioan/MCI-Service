@@ -71,6 +71,7 @@ public class PatientQueryBuilder {
     public static final String PERMANENT_THANA = "permanent_thana_id";
     public static final String PERMANENT_CITY_CORPORATION = "permanent_city_corporation_id";
     public static final String PERMANENT_COUNTRY = "permanent_country_code";
+    public static final String FULL_NAME = "full_name";
     public static final String IS_ALIVE = "is_alive";
     public static final String RELATIONS = "relations";
     public static final String PRIMARY_CONTACT = "primary_contact";

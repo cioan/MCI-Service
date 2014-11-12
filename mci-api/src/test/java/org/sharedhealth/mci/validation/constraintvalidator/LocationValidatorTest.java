@@ -3,6 +3,7 @@ package org.sharedhealth.mci.validation.constraintvalidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.sharedhealth.mci.web.config.EnvironmentMock;
 import org.sharedhealth.mci.web.config.WebMvcConfigTest;
 import org.sharedhealth.mci.web.mapper.Address;
 import org.sharedhealth.mci.web.mapper.PatientDto;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = WebMvcConfigTest.class)
+@ContextConfiguration(initializers = EnvironmentMock.class, classes = WebMvcConfigTest.class)
 public class LocationValidatorTest {
 
     @Autowired

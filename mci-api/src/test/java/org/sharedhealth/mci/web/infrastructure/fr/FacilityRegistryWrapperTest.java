@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.sharedhealth.mci.web.config.EnvironmentMock;
 import org.sharedhealth.mci.web.config.WebMvcConfig;
 import org.sharedhealth.mci.web.mapper.Facility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import static org.sharedhealth.mci.utils.FileUtil.asString;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = WebMvcConfig.class)
+@ContextConfiguration(initializers = EnvironmentMock.class, classes = WebMvcConfig.class)
 public class FacilityRegistryWrapperTest extends TestCase {
 
     @Rule
@@ -44,6 +45,6 @@ public class FacilityRegistryWrapperTest extends TestCase {
         assertThat(facility.getId(), is(facilityId));
         assertThat(facility.getCatchments(), is(notNullValue()));
         assertThat(facility.getCatchments().size(), is(1));
-        assertThat(facility.getCatchments().get(0), is("507695"));
+        assertThat(facility.getCatchments().get(0), is("1004092005"));
     }
 }
