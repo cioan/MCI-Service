@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.sharedhealth.mci.web.config.EnvironmentMock;
 import org.sharedhealth.mci.web.config.WebMvcConfig;
 import org.sharedhealth.mci.web.exception.HealthIDExistException;
 import org.sharedhealth.mci.web.handler.MCIResponse;
@@ -26,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(initializers = EnvironmentMock.class, classes = WebMvcConfig.class)
+@ContextConfiguration(classes = WebMvcConfig.class)
 public class PatientRepositoryIT {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired

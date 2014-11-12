@@ -196,7 +196,6 @@ public class PatientControllerTest {
         String json = new ObjectMapper().writeValueAsString(patientDto);
         String healthId = "healthId-100";
         patientDto.setHealthId(healthId);
-        //when(locationService.findByGeoCode(GEO_CODE)).thenReturn(location);
         when(patientService.createOrUpdate(patientDto)).thenReturn(new MCIResponse(healthId, ACCEPTED));
 
         mockMvc.perform(put(PUT_API_END_POINT, healthId).content(json).contentType(APPLICATION_JSON))

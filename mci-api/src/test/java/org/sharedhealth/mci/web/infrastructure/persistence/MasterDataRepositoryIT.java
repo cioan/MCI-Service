@@ -3,7 +3,6 @@ package org.sharedhealth.mci.web.infrastructure.persistence;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.sharedhealth.mci.web.config.EnvironmentMock;
 import org.sharedhealth.mci.web.config.WebMvcConfig;
 import org.sharedhealth.mci.web.model.MasterData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(initializers = EnvironmentMock.class, classes = WebMvcConfig.class)
+@ContextConfiguration(classes = WebMvcConfig.class)
 public class MasterDataRepositoryIT {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")

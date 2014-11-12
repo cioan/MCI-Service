@@ -30,7 +30,7 @@ public class PatientRepositoryTest {
     @Before
     public void setup() {
         initMocks(this);
-        patientRepository = new PatientRepository(template, null);
+        patientRepository = new PatientRepository(template, new PatientMapper(), null);
     }
 
     @Test

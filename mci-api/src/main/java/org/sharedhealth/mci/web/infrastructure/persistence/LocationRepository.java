@@ -30,33 +30,12 @@ public class LocationRepository extends BaseRepository {
         ResultSet resultset = null;
         try {
             resultset = template.query(cql);
+            return getLocationFromRow(resultset.one());
         } catch (Exception e) {
             logger.error("Error while finding locaiton by geo_code: " + geoCode, e);
 
         }
-
-
-//        template.queryAsynchronously(cql, new AsynchronousQueryListener() {
-//            @Override
-//            public void onQueryComplete(ResultSetFuture rsf) {
-//                try {
-//                    Row row = rsf.get(TIMEOUT_IN_MILLIS, TimeUnit.MILLISECONDS).one();
-//                    setLocationOnResult(row, result);
-//                } catch (Exception e) {
-//                    logger.error("Error while finding locaiton by geo_code: " + geoCode, e);
-//                    result.setException(e);
-//                }
-//            }
-//        });
-//
-//        return new SimpleListenableFuture<Location, Location>(result) {
-//            @Override
-//            protected Location adapt(Location adapteeResult) throws ExecutionException {
-//                return adapteeResult;
-//            }
-//        };
-        Row row = resultset.one();
-        return getLocationFromRow(row);
+        return null;
     }
 
     private void setLocationOnResult(Row r, SettableFuture<Location> result) throws InterruptedException, ExecutionException {

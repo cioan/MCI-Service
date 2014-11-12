@@ -214,9 +214,6 @@ public class Patient {
     @Column(PERMANENT_COUNTRY)
     private String permanentCountryCode;
 
-    @Column(FULL_NAME)
-    private String fullName;
-
     @Column(IS_ALIVE)
     private String isAlive;
 
@@ -261,12 +258,6 @@ public class Patient {
 
     @Column(RELATIONS)
     private String relations;
-
-    @Column("lower_sur_name")
-    private String lowerSurName;
-
-    @Column("lower_given_name")
-    private String lowerGivenName;
 
     @Override
     public boolean equals(Object rhs) {
@@ -521,14 +512,6 @@ public class Patient {
 
     public void setFathersGivenName(String fathersGivenName) {
         this.fathersGivenName = fathersGivenName;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getIsAlive() {
@@ -966,21 +949,5 @@ public class Patient {
         }
 
         return this.getLocationLevel4() + uw;
-    }
-
-    public String getLowerSurName() {
-        return lowerSurName;
-    }
-
-    public void setLowerSurName(String lowerSurName) {
-        this.lowerSurName = lowerSurName;
-    }
-
-    public String getLowerGivenName() {
-        return lowerGivenName;
-    }
-
-    public void setLowerGivenName(String lowerGivenName) {
-        this.lowerGivenName = lowerGivenName;
     }
 }
