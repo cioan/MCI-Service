@@ -34,6 +34,9 @@ public class MCIProperties {
     @Value("${HRM_CLIENT_ID}")
     private String hrmClientId;
 
+    @Value("${WORKER_ID}")
+    private String workerId;
+
     public String getCassandraKeySpace() {
         return cassandraKeySpace;
     }
@@ -80,5 +83,9 @@ public class MCIProperties {
 
     public String getHrmClientId() {
         return hrmClientId;
+    }
+
+    public String getWorkerId() {
+        return workerId;
     }
 }
