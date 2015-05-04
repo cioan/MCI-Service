@@ -1,7 +1,14 @@
 package org.sharedhealth.mci.web.handler;
 
 import org.sharedhealth.mci.web.exception.NonUpdatableFieldUpdateException;
-import org.sharedhealth.mci.web.mapper.*;
+import org.sharedhealth.mci.web.mapper.Address;
+import org.sharedhealth.mci.web.mapper.PatientActivationInfo;
+import org.sharedhealth.mci.web.mapper.PatientData;
+import org.sharedhealth.mci.web.mapper.PatientStatus;
+import org.sharedhealth.mci.web.mapper.PendingApproval;
+import org.sharedhealth.mci.web.mapper.PendingApprovalFieldDetails;
+import org.sharedhealth.mci.web.mapper.PhoneNumber;
+import org.sharedhealth.mci.web.mapper.Requester;
 import org.sharedhealth.mci.web.service.ApprovalFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +29,7 @@ public class PendingApprovalFilter {
 
     private static final String NEEDS_APPROVAL = "NA";
     private static final String NON_UPDATABLE = "NU";
+//    public static final String EMPTY_VALUE = "";
 
     private PatientData newPatient;
     private Requester requestedBy;
@@ -66,6 +74,7 @@ public class PendingApprovalFilter {
         newPatient.setAddress(processAddress(PRESENT_ADDRESS, existingPatient.getAddress(), updateRequest.getAddress()));
         newPatient.setPermanentAddress(processAddress(PERMANENT_ADDRESS, existingPatient.getPermanentAddress(), updateRequest.getPermanentAddress()));
         newPatient.setHouseholdCode(processString(HOUSEHOLD_CODE, existingPatient.getHouseholdCode(), updateRequest.getHouseholdCode()));
+        newPatient.setPatientActivationInfo(processPatientActivationInfo(ACTIVE, existingPatient.getPatientActivationInfo(), updateRequest.getPatientActivationInfo()));
 
         return newPatient;
     }
@@ -88,6 +97,25 @@ public class PendingApprovalFilter {
     private PatientStatus processPatientStatus(String key, PatientStatus oldValue, PatientStatus newValue) {
         Object patientStatus = process(key, oldValue, newValue);
         return patientStatus == null ? null : (PatientStatus) patientStatus;
+    }
+
+    private PatientActivationInfo processPatientActivationInfo(String key, PatientActivationInfo oldValue, PatientActivationInfo newValue) {
+//        if (null == newValue) {
+//            return oldValue;
+//        }
+//        Object active = process(ACTIVE, oldValue.getActive(), newValue.getActive());
+//        Object mergedWith = null;
+//        if (null != newValue.getActive() && newValue.getActive()) {
+//            mergedWith = process(MERGED_WITH, oldValue.getMergedWith(), EMPTY_VALUE);
+//        }
+//        if (null != newValue.getActive() && !newValue.getActive()) {
+//            mergedWith = process(MERGED_WITH, oldValue.getMergedWith(), newValue.getMergedWith());
+//        }
+//        newValue.setActive(active == null ? null : (Boolean) active);
+//        newValue.setMergedWith(mergedWith == null ? null : (String) mergedWith);
+//        return newValue;
+        Object patientActivationInfo = process(key, oldValue, newValue);
+        return patientActivationInfo == null ? null : (PatientActivationInfo) patientActivationInfo;
     }
 
     private UUID processUuid(String key, UUID oldValue, UUID newValue) {
