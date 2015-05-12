@@ -2,7 +2,6 @@ package org.sharedhealth.mci.web.handler;
 
 import org.sharedhealth.mci.web.exception.NonUpdatableFieldUpdateException;
 import org.sharedhealth.mci.web.mapper.Address;
-import org.sharedhealth.mci.web.mapper.PatientActivationInfo;
 import org.sharedhealth.mci.web.mapper.PatientData;
 import org.sharedhealth.mci.web.mapper.PatientStatus;
 import org.sharedhealth.mci.web.mapper.PendingApproval;
@@ -74,7 +73,8 @@ public class PendingApprovalFilter {
         newPatient.setAddress(processAddress(PRESENT_ADDRESS, existingPatient.getAddress(), updateRequest.getAddress()));
         newPatient.setPermanentAddress(processAddress(PERMANENT_ADDRESS, existingPatient.getPermanentAddress(), updateRequest.getPermanentAddress()));
         newPatient.setHouseholdCode(processString(HOUSEHOLD_CODE, existingPatient.getHouseholdCode(), updateRequest.getHouseholdCode()));
-        newPatient.setPatientActivationInfo(processPatientActivationInfo(ACTIVE, existingPatient.getPatientActivationInfo(), updateRequest.getPatientActivationInfo()));
+        newPatient.setActive((Boolean) process(ACTIVE, existingPatient.getActive(), updateRequest.getActive()));
+        newPatient.setMergedWith(processString(MERGED_WITH, existingPatient.getMergedWith(), updateRequest.getMergedWith()));
 
         return newPatient;
     }
@@ -97,11 +97,6 @@ public class PendingApprovalFilter {
     private PatientStatus processPatientStatus(String key, PatientStatus oldValue, PatientStatus newValue) {
         Object patientStatus = process(key, oldValue, newValue);
         return patientStatus == null ? null : (PatientStatus) patientStatus;
-    }
-
-    private PatientActivationInfo processPatientActivationInfo(String key, PatientActivationInfo oldValue, PatientActivationInfo newValue) {
-        Object patientActivationInfo = process(key, oldValue, newValue);
-        return patientActivationInfo == null ? null : (PatientActivationInfo) patientActivationInfo;
     }
 
     private UUID processUuid(String key, UUID oldValue, UUID newValue) {
