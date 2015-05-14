@@ -56,6 +56,7 @@ ext.libraries = [
         apache_bean_utils    : "commons-beanutils:commons-beanutils:1.9.2",
         commons_codec        : "commons-codec:commons-codec:1.4",
         commons_validator    : "commons-validator:commons-validator:1.4.1",
+        commons_io           : "commons-io:commons-io:2.4",
         joda_time            : "joda-time:joda-time:2.7",
         apache_lang          : "org.apache.commons:commons-lang3:3.3.2",
         spring_security      : "org.springframework.security:spring-security-web:3.2.5.RELEASE",
