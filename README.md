@@ -47,9 +47,10 @@ Notes:
 - Stub Identity Server will run in port 8080
 
 ### load some location data in MCI
+* vagrant ssh
 * cqlsh 192.168.33.19
 * describe keyspaces
-* use mci
+* use mci;
 * copy and run the following scripts for some sample location data
 
 ```
