@@ -71,7 +71,7 @@ Example steps:
 
 (The above should return you an access_token)
 
-* With the above token, now you can post a JSON content to create a patient, with the following headers
+* With the above token, now you can POST to http://192.168.33.19:8081/api/v1/patients a JSON content to create a patient, with the following headers
   * X-Auth-Token:{the token you received in the previous step}
   * client_id:6 { this is client id for the user who signed in}
   * From: angshus@thoughtworks.com
@@ -94,6 +94,11 @@ Sample json to create a patient:
     "confidential": "No"
 }
 ```
+* To view the patient record you just created do a GET to http://192.168.33.19:8081/api/v1/patients?nid=1666321725072 with the following headers
+  * X-Auth-Token:{the token you received in the previous step}
+  * client_id:6 { this is client id for the user who signed in}
+  * From: angshus@thoughtworks.com
+  * Content-Type:application/json
 
 The sub IdP doesn't expire the token unless the Identity-Service is restarted. So you can keep using the "access_token". In reality, the access_token is short-lived and also can be invalidated.
 
